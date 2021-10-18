@@ -1,0 +1,637 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Material Stock - Read",
+    "version": "1 ",
+    "description": "This service enables you to retrieve material stock information using the OData protocol with filter data provided in the payload. It can be consumed by external warehouse applications."
+  },
+  "externalDocs": {
+    "description": "Business Documentation",
+    "url": "https://help.sap.com/http.svc/ahp2/SAP_S4HANA_ON-PREMISE/2020.002/EN/f6/8f51a4dc2e46779877a10a301d9138/frameset.htm"
+  },
+  "x-sap-api-type": "ODATA",
+  "x-sap-shortText": "Use this synchronous inbound service to read material stock information",
+  "x-sap-api-deprecated": "No",
+  "x-sap-software-min-version": "2020",
+  "x-sap-ext-overview": [
+    {
+      "name": "Authentication Methods",
+      "values": [
+        {
+          "text": "Basic, x509",
+          "format": "plain"
+        }
+      ]
+    },
+    {
+      "name": "Business Object",
+      "values": [
+        {
+          "text": "Material Stock",
+          "format": "plain"
+        }
+      ]
+    }
+  ],
+  "x-sap-stateInfo": {
+    "state": "active"
+  },
+  "security": [
+    {
+      "basicAuthentication": []
+    }
+  ],
+  "servers": [
+    {
+      "url": "https://{host}:{port}/sap/opu/odata/sap/API_MATERIAL_STOCK_SRV",
+      "variables": {
+        "host": {
+          "default": ""
+        },
+        "port": {
+          "default": ""
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "Material Master"
+    },
+    {
+      "name": "Material Stock"
+    }
+  ],
+  "paths": {
+    "/A_MaterialStock('{Material}')/to_MatlStkInAcctMod": {
+      "parameters": [
+        {
+          "name": "Material",
+          "in": "path",
+          "required": true,
+          "description": "Material Number",
+          "schema": {
+            "type": "string",
+            "maxLength": 40
+          }
+        }
+      ],
+      "get": {
+        "summary": "Reads material stock information for a specific material",
+        "description": "Reads material stock information in the account model for a specific material for which a certain stock has been posted.",
+        "tags": [
+          "Material Master",
+          "Material Stock"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/top"
+          },
+          {
+            "$ref": "#/components/parameters/skip"
+          },
+          {
+            "name": "$filter",
+            "in": "query",
+            "description": "Filter items by property values, see [Filtering](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=64)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/count"
+          },
+          {
+            "name": "$orderby",
+            "in": "query",
+            "description": "Order items by property values, see [Sorting](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=65)",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "Material",
+                  "Material desc",
+                  "Plant",
+                  "Plant desc",
+                  "StorageLocation",
+                  "StorageLocation desc",
+                  "Batch",
+                  "Batch desc",
+                  "Supplier",
+                  "Supplier desc",
+                  "Customer",
+                  "Customer desc",
+                  "WBSElementInternalID",
+                  "WBSElementInternalID desc",
+                  "SDDocument",
+                  "SDDocument desc",
+                  "SDDocumentItem",
+                  "SDDocumentItem desc",
+                  "InventorySpecialStockType",
+                  "InventorySpecialStockType desc",
+                  "InventoryStockType",
+                  "InventoryStockType desc",
+                  "MaterialBaseUnit",
+                  "MaterialBaseUnit desc",
+                  "MatlWrhsStkQtyInMatlBaseUnit",
+                  "MatlWrhsStkQtyInMatlBaseUnit desc"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$select",
+            "in": "query",
+            "description": "Select properties to be returned, see [Select](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=68)",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "Material",
+                  "Plant",
+                  "StorageLocation",
+                  "Batch",
+                  "Supplier",
+                  "Customer",
+                  "WBSElementInternalID",
+                  "SDDocument",
+                  "SDDocumentItem",
+                  "InventorySpecialStockType",
+                  "InventoryStockType",
+                  "MaterialBaseUnit",
+                  "MatlWrhsStkQtyInMatlBaseUnit",
+                  "to_MaterialStock"
+                ]
+              }
+            }
+          },
+          {
+            "name": "$expand",
+            "in": "query",
+            "description": "Expand related entities, see [Expand](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=63)",
+            "explode": false,
+            "schema": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "to_MaterialStock"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieved entities",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Wrapper",
+                  "type": "object",
+                  "properties": {
+                    "d": {
+                      "title": "Collection of A_MatlStkInAcctModType",
+                      "type": "object",
+                      "properties": {
+                        "__count": {
+                          "$ref": "#/components/schemas/count"
+                        },
+                        "results": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/API_MATERIAL_STOCK_SRV.A_MatlStkInAcctModType"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/$batch": {
+      "post": {
+        "summary": "Send a group of requests",
+        "description": "Group multiple requests into a single request payload, see [Batch Requests](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=152).\n\n*Please note that \"Try it out\" is not supported for this request.*",
+        "tags": [
+          "Batch Requests"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Batch request",
+          "content": {
+            "multipart/mixed;boundary=request-separator": {
+              "schema": {
+                "type": "string"
+              },
+              "example": "--request-separator\nContent-Type: application/http\nContent-Transfer-Encoding: binary\n\nGET A_MaterialStock HTTP/1.1\nAccept: application/json\n\n\n--request-separator--"
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Batch response",
+            "content": {
+              "multipart/mixed": {
+                "schema": {
+                  "type": "string"
+                },
+                "example": "--response-separator\nContent-Type: application/http\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{...}\n--response-separator--"
+              }
+            }
+          },
+          "4XX": {
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "basicAuthentication": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    },
+    "schemas": {
+      "API_MATERIAL_STOCK_SRV.A_MaterialStockType": {
+        "type": "object",
+        "properties": {
+          "Material": {
+            "type": "string",
+            "maxLength": 40,
+            "title": "Material",
+            "description": "Material Number"
+          },
+          "MaterialBaseUnit": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 3,
+            "title": "Base Unit of Measure"
+          },
+          "to_MatlStkInAcctMod": {
+            "type": "object",
+            "properties": {
+              "results": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/API_MATERIAL_STOCK_SRV.A_MatlStkInAcctModType"
+                }
+              }
+            }
+          }
+        },
+        "title": "Material Master"
+      },
+      "API_MATERIAL_STOCK_SRV.A_MaterialStockType-create": {
+        "type": "object",
+        "properties": {
+          "Material": {
+            "type": "string",
+            "maxLength": 40,
+            "title": "Material",
+            "description": "Material Number"
+          },
+          "MaterialBaseUnit": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 3,
+            "title": "Base Unit of Measure"
+          },
+          "to_MatlStkInAcctMod": {
+            "type": "object",
+            "properties": {
+              "results": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/API_MATERIAL_STOCK_SRV.A_MatlStkInAcctModType-create"
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "Material"
+        ],
+        "title": "Material Master (for create)"
+      },
+      "API_MATERIAL_STOCK_SRV.A_MaterialStockType-update": {
+        "type": "object",
+        "properties": {
+          "MaterialBaseUnit": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 3,
+            "title": "Base Unit of Measure"
+          }
+        },
+        "title": "Material Master (for update)"
+      },
+      "API_MATERIAL_STOCK_SRV.A_MatlStkInAcctModType": {
+        "type": "object",
+        "properties": {
+          "Material": {
+            "type": "string",
+            "maxLength": 40,
+            "title": "Stock Material",
+            "description": "Material in Respect of Which Stock is Managed"
+          },
+          "Plant": {
+            "type": "string",
+            "maxLength": 4,
+            "title": "Plant"
+          },
+          "StorageLocation": {
+            "type": "string",
+            "maxLength": 4,
+            "title": "Storage location"
+          },
+          "Batch": {
+            "type": "string",
+            "maxLength": 10,
+            "title": "Batch SID",
+            "description": "Batch Number (Stock Identifier)"
+          },
+          "Supplier": {
+            "type": "string",
+            "maxLength": 10,
+            "title": "Supplier SID",
+            "description": "Supplier for Special Stock"
+          },
+          "Customer": {
+            "type": "string",
+            "maxLength": 10,
+            "title": "Customer SID",
+            "description": "Customer for Special Stock"
+          },
+          "WBSElementInternalID": {
+            "type": "string",
+            "maxLength": 24,
+            "title": "WBS Element",
+            "description": "Valuated Sales Order Stock WBS Element"
+          },
+          "SDDocument": {
+            "type": "string",
+            "maxLength": 10,
+            "title": "Sales order",
+            "description": "Sales order number of valuated sales order stock"
+          },
+          "SDDocumentItem": {
+            "type": "string",
+            "maxLength": 6,
+            "title": "Sales order item",
+            "description": "Sales Order Item of Valuated Sales Order Stock"
+          },
+          "InventorySpecialStockType": {
+            "type": "string",
+            "maxLength": 1,
+            "title": "Special Stock Type"
+          },
+          "InventoryStockType": {
+            "type": "string",
+            "maxLength": 2,
+            "title": "Stock Type",
+            "description": "Stock Type of Goods Movement (Stock Identifier)"
+          },
+          "MaterialBaseUnit": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 3,
+            "title": "Base Unit of Measure"
+          },
+          "MatlWrhsStkQtyInMatlBaseUnit": {
+            "type": "string",
+            "nullable": true,
+            "format": "decimal",
+            "multipleOf": 1.0e-14,
+            "example": "0"
+          },
+          "to_MaterialStock": {
+            "$ref": "#/components/schemas/API_MATERIAL_STOCK_SRV.A_MaterialStockType"
+          }
+        },
+        "title": "Material Stock"
+      },
+      "API_MATERIAL_STOCK_SRV.A_MatlStkInAcctModType-create": {
+        "type": "object",
+        "properties": {
+          "Material": {
+            "type": "string",
+            "maxLength": 40,
+            "title": "Stock Material",
+            "description": "Material in Respect of Which Stock is Managed"
+          },
+          "Plant": {
+            "type": "string",
+            "maxLength": 4,
+            "title": "Plant"
+          },
+          "StorageLocation": {
+            "type": "string",
+            "maxLength": 4,
+            "title": "Storage location"
+          },
+          "Batch": {
+            "type": "string",
+            "maxLength": 10,
+            "title": "Batch SID",
+            "description": "Batch Number (Stock Identifier)"
+          },
+          "Supplier": {
+            "type": "string",
+            "maxLength": 10,
+            "title": "Supplier SID",
+            "description": "Supplier for Special Stock"
+          },
+          "Customer": {
+            "type": "string",
+            "maxLength": 10,
+            "title": "Customer SID",
+            "description": "Customer for Special Stock"
+          },
+          "WBSElementInternalID": {
+            "type": "string",
+            "maxLength": 24,
+            "title": "WBS Element",
+            "description": "Valuated Sales Order Stock WBS Element"
+          },
+          "SDDocument": {
+            "type": "string",
+            "maxLength": 10,
+            "title": "Sales order",
+            "description": "Sales order number of valuated sales order stock"
+          },
+          "SDDocumentItem": {
+            "type": "string",
+            "maxLength": 6,
+            "title": "Sales order item",
+            "description": "Sales Order Item of Valuated Sales Order Stock"
+          },
+          "InventorySpecialStockType": {
+            "type": "string",
+            "maxLength": 1,
+            "title": "Special Stock Type"
+          },
+          "InventoryStockType": {
+            "type": "string",
+            "maxLength": 2,
+            "title": "Stock Type",
+            "description": "Stock Type of Goods Movement (Stock Identifier)"
+          },
+          "MaterialBaseUnit": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 3,
+            "title": "Base Unit of Measure"
+          },
+          "MatlWrhsStkQtyInMatlBaseUnit": {
+            "type": "string",
+            "nullable": true,
+            "format": "decimal",
+            "multipleOf": 1.0e-14,
+            "example": "0"
+          },
+          "to_MaterialStock": {
+            "$ref": "#/components/schemas/API_MATERIAL_STOCK_SRV.A_MaterialStockType-create"
+          }
+        },
+        "required": [
+          "Material",
+          "Plant",
+          "StorageLocation",
+          "Batch",
+          "Supplier",
+          "Customer",
+          "WBSElementInternalID",
+          "SDDocument",
+          "SDDocumentItem",
+          "InventorySpecialStockType",
+          "InventoryStockType"
+        ],
+        "title": "Material Stock (for create)"
+      },
+      "API_MATERIAL_STOCK_SRV.A_MatlStkInAcctModType-update": {
+        "type": "object",
+        "properties": {
+          "MaterialBaseUnit": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 3,
+            "title": "Base Unit of Measure"
+          },
+          "MatlWrhsStkQtyInMatlBaseUnit": {
+            "type": "string",
+            "nullable": true,
+            "format": "decimal",
+            "multipleOf": 1.0e-14,
+            "example": "0"
+          }
+        },
+        "title": "Material Stock (for update)"
+      },
+      "count": {
+        "type": "string",
+        "description": "The number of entities in the collection. Available when using the [$inlinecount](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=67) query option."
+      },
+      "error": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "object",
+                "required": [
+                  "lang",
+                  "value"
+                ],
+                "properties": {
+                  "lang": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              },
+              "innererror": {
+                "type": "object",
+                "description": "The structure of this object is service-specific"
+              }
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "top": {
+        "name": "$top",
+        "in": "query",
+        "description": "Show only the first n items, see [Paging - Top](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=66)",
+        "schema": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "example": 50
+      },
+      "skip": {
+        "name": "$skip",
+        "in": "query",
+        "description": "Skip the first n items, see [Paging - Skip](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=65)",
+        "schema": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "count": {
+        "name": "$inlinecount",
+        "in": "query",
+        "description": "Include count of items, see [Inlinecount](https://help.sap.com/doc/5890d27be418427993fafa6722cdc03b/Cloud/en-US/OdataV2.pdf#page=67)",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "allpages",
+            "none"
+          ]
+        }
+      }
+    },
+    "responses": {
+      "error": {
+        "description": "Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/error"
+            }
+          }
+        }
+      }
+    }
+  }
+}
