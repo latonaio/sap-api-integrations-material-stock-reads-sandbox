@@ -41,7 +41,7 @@ func (c *SAPAPICaller) AsyncGetMaterialStock(Material, Plant, StorageLocation, B
 }
 
 func (c *SAPAPICaller) MaterialStockStorageLocation(Material, Plant, StorageLocation string) {
-	res, err := c.callMaterialStockSrvAPIRequirementBatch("A_MaterialStock('{Material}')/to_MatlStkInAcctMod", Material, Plant, StorageLocation)
+	res, err := c.callMaterialStockSrvAPIRequirementMaterialPlantStorageLocation("A_MaterialStock('{Material}')/to_MatlStkInAcctMod", Material, Plant, StorageLocation)
 	if err != nil {
 		c.log.Error(err)
 		return
