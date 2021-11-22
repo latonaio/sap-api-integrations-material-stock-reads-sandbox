@@ -16,6 +16,7 @@ func main() {
 	)
 
 	caller.AsyncGetMaterialStock(
+		inoutSDC.Material.Plant.StorageLocation,
 		inoutSDC.Material.Plant.StorageLocation.Batch,
 	)
 }

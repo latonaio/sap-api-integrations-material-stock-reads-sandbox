@@ -41,7 +41,7 @@ func (c *SAPAPICaller) AsyncGetMaterialStock(Material, Plant, StorageLocation, B
 }
 
 func (c *SAPAPICaller) MaterialStockStorageLocation(Material, Plant, StorageLocation string) {
-	res, err := c.callMaterialStockSrvAPIRequirementMaterialPlantStorageLocation("A_MaterialStock('{Material}')/to_MatlStkInAcctMod", Material, Plant, StorageLocation)
+	res, err := c.callMaterialStockSrvAPIRequirementStorageLocation("A_MaterialStock('{Material}')/to_MatlStkInAcctMod", Material, Plant, StorageLocation)
 	if err != nil {
 		c.log.Error(err)
 		return
@@ -62,7 +62,30 @@ func (c *SAPAPICaller) MaterialStockBatch(Material, Plant, StorageLocation, Batc
 
 }
 
-func (c *SAPAPICaller) callMaterialStockSrvAPIRequirement(api, Material, Plant, StorageLocation, Batch string) ([]byte, error) {
+func (c *SAPAPICaller) callMaterialStockSrvAPIRequirementStorageLocation(api, Material, Plant, StorageLocation, Batch string) ([]byte, error) {
+	url := strings.Join([]string{c.baseURL, "API_MATERIAL_STOCK_SRV", api}, "/")
+	req, _ := http.NewRequest("GET", url, nil)
+
+	params := req.URL.Query()
+	// params.Add("$select", "Material, Plant, StorageLocation")
+	params.Add("$filter", fmt.Sprintf("Material eq '%s' and Plant eq '%s' and StorageLocation eq '%s'", Material, Plant, StorageLocation))
+	req.URL.RawQuery = params.Encode()
+
+	req.Header.Set("APIKey", c.apiKey)
+	req.Header.Set("Accept", "application/json")
+
+	client := new(http.Client)
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	byteArray, _ := ioutil.ReadAll(resp.Body)
+	return byteArray, nil
+}
+
+func (c *SAPAPICaller) callMaterialStockSrvAPIRequirementBatch(api, Material, Plant, StorageLocation, Batch string) ([]byte, error) {
 	url := strings.Join([]string{c.baseURL, "API_MATERIAL_STOCK_SRV", api}, "/")
 	req, _ := http.NewRequest("GET", url, nil)
 
