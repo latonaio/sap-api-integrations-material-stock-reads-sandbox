@@ -1,4 +1,4 @@
-package sap_api_caller
+package sap_api_output_formatter
 
 type MaterialStockReads struct {
 	 ConnectionKey string `json:"connection_key"`
@@ -7,7 +7,7 @@ type MaterialStockReads struct {
 	 Filepath      string `json:"filepath"`
 	 APISchema     string `json:"api_schema"`
 	 Material      string `json:"material_code"`
-	 Deleted       string `json:"deleted"`
+	 Deleted       bool   `json:"deleted"`
 }
 
 type MaterialStock   struct {
@@ -15,5 +15,5 @@ type MaterialStock   struct {
      Plant           string `json:"Plant"`
      StorageLocation string `json:"StorageLocation"`
      Batch           string `json:"Batch"`
-     ToMaterialStock int    `json:"to_MaterialStock"`
+     ToMaterialStock string `json:"to_MaterialStock"`
 }

@@ -5,6 +5,7 @@
 	"Batch": "",
 	"to_MaterialStock": 7,
 	"cursor": "/Users/kyotatashiro/go/src/sap-api-integrations-material-stock-reads/SAP_API_Caller/caller.go#L220",
+	"function":"sap-api-integrations-material-stock-reads/SAP_API_Caller.(*SAPAPICaller).MaterialStock",
 	"level": "INFO",
 	"time": "2021-11-20T18:28:36.143833+09:00"
 }
