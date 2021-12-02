@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	sap_api_output_formatter "sap-api-integrations-material-stock-reads/SAP_API_Output_Formatter"
 	"strings"
 	"sync"
 
 	"github.com/latonaio/golang-logging-library/logger"
+	"golang.org/x/xerrors"
 )
 
 type SAPAPICaller struct {
@@ -24,86 +26,87 @@ func NewSAPAPICaller(baseUrl string, l *logger.Logger) *SAPAPICaller {
 	}
 }
 
-func (c *SAPAPICaller) AsyncGetMaterialStock(Material, Plant, StorageLocation, Batch string) {
+func (c *SAPAPICaller) AsyncGetMaterialStock(material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType string) {
 	wg := &sync.WaitGroup{}
 
 	wg.Add(2)
-	go func() {
-		c.MaterialStockStorageLocation(Material, Plant, StorageLocation)
+	func() {
+		c.MaterialStock(material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType)
 		wg.Done()
 	}()
-	go func() {
-		c.MaterialStockBatch(Material, Plant, StorageLocation, Batch)
+	func() {
+		c.ToMaterialStock(material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType)
 		wg.Done()
 	}()
-	
 	wg.Wait()
 }
 
-func (c *SAPAPICaller) MaterialStockStorageLocation(Material, Plant, StorageLocation string) {
-	res, err := c.callMaterialStockSrvAPIRequirementStorageLocation("A_MaterialStock('{Material}')/to_MatlStkInAcctMod", Material, Plant, StorageLocation)
+func (c *SAPAPICaller) MaterialStock(material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType string) {
+	data, err := c.callMaterialStockSrvAPIRequirementMaterialStock("A_MatlStkInAcctMod", material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType)
 	if err != nil {
 		c.log.Error(err)
 		return
 	}
-
-	c.log.Info(res)
-
+	c.log.Info(data)
 }
 
-func (c *SAPAPICaller) MaterialStockBatch(Material, Plant, StorageLocation, Batch string) {
-	res, err := c.callMaterialStockSrvAPIRequirementBatch("A_MaterialStock('{Material}')/to_MatlStkInAcctMod", Material, Plant, StorageLocation, Batch)
+func (c *SAPAPICaller) callMaterialStockSrvAPIRequirementMaterialStock(api, material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType string) (*sap_api_output_formatter.MaterialStock, error) {
+	url := strings.Join([]string{c.baseURL, "API_MATERIAL_STOCK_SRV", api}, "/")
+	req, _ := http.NewRequest("GET", url, nil)
+
+	c.setHeaderAPIKeyAccept(req)
+	c.getQueryWithMaterialStock(req, material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType)
+
+	resp, err := new(http.Client).Do(req)
+	if err != nil {
+		return nil, xerrors.Errorf("API request error: %w", err)
+	}
+	defer resp.Body.Close()
+
+	byteArray, _ := ioutil.ReadAll(resp.Body)
+	data, err := sap_api_output_formatter.ConvertToMaterialStock(byteArray, c.log)
+	if err != nil {
+		return nil, xerrors.Errorf("convert error: %w", err)
+	}
+	return data, nil
+}
+
+func (c *SAPAPICaller) ToMaterialStock(material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType string) {
+	data, err := c.callMaterialStockSrvAPIRequirementToMaterialStock(fmt.Sprintf("A_MatlStkInAcctMod(Material='%s',Plant='%s',StorageLocation='%s',Batch='%s',Supplier='%s',Customer='%s',WBSElementInternalID='%s',SDDocument='%s',SDDocumentItem='%s',InventorySpecialStockType='%s',InventoryStockType='%s')/to_MaterialStock", material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType))
 	if err != nil {
 		c.log.Error(err)
 		return
 	}
-
-	c.log.Info(res)
-
+	c.log.Info(data)
 }
 
-func (c *SAPAPICaller) callMaterialStockSrvAPIRequirementStorageLocation(api, Material, Plant, StorageLocation, Batch string) ([]byte, error) {
+func (c *SAPAPICaller) callMaterialStockSrvAPIRequirementToMaterialStock(api string) (*sap_api_output_formatter.ToMaterialStock, error) {
 	url := strings.Join([]string{c.baseURL, "API_MATERIAL_STOCK_SRV", api}, "/")
 	req, _ := http.NewRequest("GET", url, nil)
 
-	params := req.URL.Query()
-	// params.Add("$select", "Material, Plant, StorageLocation")
-	params.Add("$filter", fmt.Sprintf("Material eq '%s' and Plant eq '%s' and StorageLocation eq '%s'", Material, Plant, StorageLocation))
-	req.URL.RawQuery = params.Encode()
+	c.setHeaderAPIKeyAccept(req)
 
-	req.Header.Set("APIKey", c.apiKey)
-	req.Header.Set("Accept", "application/json")
-
-	client := new(http.Client)
-	resp, err := client.Do(req)
+	resp, err := new(http.Client).Do(req)
 	if err != nil {
-		return nil, err
+		return nil, xerrors.Errorf("API request error: %w", err)
 	}
 	defer resp.Body.Close()
 
 	byteArray, _ := ioutil.ReadAll(resp.Body)
-	return byteArray, nil
+	data, err := sap_api_output_formatter.ConvertToToMaterialStock(byteArray, c.log)
+	if err != nil {
+		return nil, xerrors.Errorf("convert error: %w", err)
+	}
+	return data, nil
 }
 
-func (c *SAPAPICaller) callMaterialStockSrvAPIRequirementBatch(api, Material, Plant, StorageLocation, Batch string) ([]byte, error) {
-	url := strings.Join([]string{c.baseURL, "API_MATERIAL_STOCK_SRV", api}, "/")
-	req, _ := http.NewRequest("GET", url, nil)
-
-	params := req.URL.Query()
-	// params.Add("$select", "Material, Plant, StorageLocation, Batch")
-	params.Add("$filter", fmt.Sprintf("Material eq '%s' and Plant eq '%s' and StorageLocation eq '%s' and Batch eq '%s'", Material, Plant, StorageLocation, Batch))
-	req.URL.RawQuery = params.Encode()
-
+func (c *SAPAPICaller) setHeaderAPIKeyAccept(req *http.Request) {
 	req.Header.Set("APIKey", c.apiKey)
 	req.Header.Set("Accept", "application/json")
+}
 
-	client := new(http.Client)
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	byteArray, _ := ioutil.ReadAll(resp.Body)
-	return byteArray, nil
+func (c *SAPAPICaller) getQueryWithMaterialStock(req *http.Request, material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType string) {
+	params := req.URL.Query()
+	params.Add("$filter", fmt.Sprintf("Material eq '%s' and Plant eq '%s' and StorageLocation eq '%s' and Batch eq '%s' and Supplier eq '%s' and Customer eq '%s' and WBSElementInternalID eq '%s' and SDDocument eq '%s' and SDDocumentItem eq '%s' and InventorySpecialStockType eq '%s' and InventoryStockType eq '%s'", material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType))
+	req.URL.RawQuery = params.Encode()
 }

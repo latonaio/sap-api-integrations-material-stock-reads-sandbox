@@ -11,9 +11,32 @@ type MaterialStockReads struct {
 }
 
 type MaterialStock   struct {
-     Material        string `json:"Material"`
-     Plant           string `json:"Plant"`
-     StorageLocation string `json:"StorageLocation"`
-     Batch           string `json:"Batch"`
-     ToMaterialStock string `json:"to_MaterialStock"`
+     Material                     string `json:"Material"`
+     Plant                        string `json:"Plant"`
+     StorageLocation              string `json:"StorageLocation"`
+     Batch                        string `json:"Batch"`
+     Supplier                     string `json:"Supplier"`
+     Customer                     string `json:"Customer"`
+     WBSElementInternalID         string `json:"WBSElementInternalID"`
+     SDDocument                   string `json:"SDDocument"`
+     SDDocumentItem               string `json:"SDDocumentItem"`
+     InventorySpecialStockType    string `json:"InventorySpecialStockType"`
+     InventoryStockType           string `json:"InventoryStockType"`
+     MaterialBaseUnit             string `json:"MaterialBaseUnit"`
+     MatlWrhsStkQtyInMatlBaseUnit string `json:"MatlWrhsStkQtyInMatlBaseUnit"`
+}
+
+type ToMaterialStock struct {
+    Material                     string `json:"Material"`
+    Plant                        string `json:"Plant"`
+    StorageLocation              string `json:"StorageLocation"`
+    Batch                        string `json:"Batch"`
+    Supplier                     string `json:"Supplier"`
+    Customer                     string `json:"Customer"`
+    WBSElementInternalID         string `json:"WBSElementInternalID"`
+    SDDocument                   string `json:"SDDocument"`
+    SDDocumentItem               string `json:"SDDocumentItem"`
+    InventorySpecialStockType    string `json:"InventorySpecialStockType"`
+    InventoryStockType           string `json:"InventoryStockType"`
+    ToMaterialStock              string `json:"to_MaterialStock"`
 }

@@ -1,4 +1,4 @@
-package file_reader
+package sap_api_input_reader
 
 import (
 	"encoding/json"
