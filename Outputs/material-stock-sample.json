@@ -1,11 +1,19 @@
 {
-	"Material": "100141",
-	"Plant": "1000",
-	"StorageLocation": "1000",
-	"Batch": "",
-	"to_MaterialStock": "7",
-	"cursor": "/Users/kyotatashiro/go/src/sap-api-integrations-material-stock-reads/SAP_API_Caller/caller.go#L220",
-	"function":"sap-api-integrations-material-stock-reads/SAP_API_Caller.(*SAPAPICaller).MaterialStock",
+	"Batch": "0000000109",
+	"Customer": "",
+	"InventorySpecialStockType": "",
+	"InventoryStockType": "01",
+	"Material": "FG29",
+	"MaterialBaseUnit": "BT",
+	"MatlWrhsStkQtyInMatlBaseUnit": "100",
+	"Plant": "1710",
+	"SDDocument": "",
+	"SDDocumentItem": "0",
+	"StorageLocation": "171A",
+	"Supplier": "",
+	"WBSElementInternalID": "000000000000000000000000",
+	"cursor": "/Users/latona2/bitbucket/sap-api-integrations-material-stock-reads/SAP_API_Caller/caller.go#L50",
+	"function": "sap-api-integrations-material-stock-reads/SAP_API_Caller.(*SAPAPICaller).MaterialStock",
 	"level": "INFO",
-	"time": "2021-11-20T18:28:36.143833+09:00"
+	"time": "2021-12-02T17:56:29.953557+09:00"
 }
