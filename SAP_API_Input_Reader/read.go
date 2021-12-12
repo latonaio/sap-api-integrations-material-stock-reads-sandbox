@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 )
 
@@ -17,13 +16,14 @@ func NewFileReader() *FileReader {
 func (*FileReader) ReadECMC(path string) EC_MC {
 	raw, err := ioutil.ReadFile(path)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Printf("input data read error :%#v", err.Error())
 		os.Exit(1)
 	}
 	ec := EC_MC{}
 	err = json.Unmarshal(raw, &ec)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("input data marshal error :%#v", err.Error())
+		os.Exit(1)
 	}
 
 	return ec
@@ -32,13 +32,14 @@ func (*FileReader) ReadECMC(path string) EC_MC {
 func (*FileReader) ReadSDC(path string) SDC {
 	raw, err := ioutil.ReadFile(path)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Printf("input data read error :%#v", err.Error())
 		os.Exit(1)
 	}
 	sdc := SDC{}
 	err = json.Unmarshal(raw, &sdc)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("input data marshal error :%#v", err.Error())
+		os.Exit(1)
 	}
 
 	return sdc

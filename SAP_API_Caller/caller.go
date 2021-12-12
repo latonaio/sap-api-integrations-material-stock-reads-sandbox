@@ -26,18 +26,27 @@ func NewSAPAPICaller(baseUrl string, l *logger.Logger) *SAPAPICaller {
 	}
 }
 
-func (c *SAPAPICaller) AsyncGetMaterialStock(material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType string) {
+func (c *SAPAPICaller) AsyncGetMaterialStock(material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType string, accepter []string) {
 	wg := &sync.WaitGroup{}
+	wg.Add(len(accepter))
+	for _, fn := range accepter {
+		switch fn {
+		case "MaterialStock":
+			func() {
+				c.MaterialStock(material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType)
+				wg.Done()
+			}()
+		case "ToMaterialStock":
+			func() {
+				c.ToMaterialStock(material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType)
+				wg.Done()
+			}()
 
-	wg.Add(2)
-	func() {
-		c.MaterialStock(material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType)
-		wg.Done()
-	}()
-	func() {
-		c.ToMaterialStock(material, plant, storageLocation, batch, supplier, customer, wBSElementInternalID, sDDocument, sDDocumentItem, inventorySpecialStockType, inventoryStockType)
-		wg.Done()
-	}()
+		default:
+			wg.Done()
+		}
+	}
+
 	wg.Wait()
 }
 

@@ -15,6 +15,13 @@ func main() {
 		"https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap/", l,
 	)
 
+	accepter := inoutSDC.Accepter
+	if len(accepter) == 0 || accepter[0] == "All" {
+		accepter = []string{
+			"MaterialStock", "ToMaterialStock",
+		}
+	}
+
 	caller.AsyncGetMaterialStock(
 		inoutSDC.MaterialStock.Material,
 		inoutSDC.MaterialStock.Plant,
@@ -27,5 +34,6 @@ func main() {
 		inoutSDC.MaterialStock.SDDocumentItem,
 		inoutSDC.MaterialStock.InventorySpecialStockType,
 		inoutSDC.MaterialStock.InventoryStockType,
+		accepter,
 	)
 }

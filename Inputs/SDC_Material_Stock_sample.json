@@ -10,7 +10,7 @@
 		"Batch": "0000000109",
         "Supplier": "",
         "Customer": "",
-        "WBSElementInternalID": "000000000000000000000000",
+        "WBSElementInternalID": "",
         "SDDocument": "",
         "SDDocumentItem": "0",
         "InventorySpecialStockType": "",
@@ -20,7 +20,7 @@
         "to_MaterialStock": ""
 	},
 	"api_schema": "/A_MatlStkInAcctMod",
-	"accepter": ["MaterialStock"],
+	"accepter": ["All"],
 	"material_code": "FG29",
 	"deleted": false
 }
