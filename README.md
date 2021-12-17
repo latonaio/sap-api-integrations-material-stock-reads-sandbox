@@ -101,3 +101,30 @@ func (c *SAPAPICaller) AsyncGetMaterialStock(material, plant, storageLocation, b
 	wg.Wait()
 }
 ```
+
+## Output  
+本マイクロサービスでは、[golang-logging-library](https://github.com/latonaio/golang-logging-library) により、以下のようなデータがJSON形式で出力されます。  
+以下の sample.json の例は、SAP 品目在庫データ が取得された結果の JSON の例です。  
+以下の項目のうち、"BaseUnit" ～ "WeightUnit" は、/SAP_API_Output_Formatter/type.go 内 の Type Product {} による出力結果です。"cursor" ～ "time"は、golang-logging-library による 定型フォーマットの出力結果です。  
+
+```
+{
+	"Batch": "0000000109",
+	"Customer": "",
+	"InventorySpecialStockType": "",
+	"InventoryStockType": "01",
+	"Material": "FG29",
+	"MaterialBaseUnit": "BT",
+	"MatlWrhsStkQtyInMatlBaseUnit": "100",
+	"Plant": "1710",
+	"SDDocument": "",
+	"SDDocumentItem": "0",
+	"StorageLocation": "171A",
+	"Supplier": "",
+	"WBSElementInternalID": "000000000000000000000000",
+	"cursor": "/Users/latona2/bitbucket/sap-api-integrations-material-stock-reads/SAP_API_Caller/caller.go#L50",
+	"function": "sap-api-integrations-material-stock-reads/SAP_API_Caller.(*SAPAPICaller).MaterialStock",
+	"level": "INFO",
+	"time": "2021-12-02T17:56:29.953557+09:00"
+}
+```
