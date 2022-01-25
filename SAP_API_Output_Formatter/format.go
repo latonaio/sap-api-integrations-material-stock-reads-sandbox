@@ -8,7 +8,7 @@ import (
 	"golang.org/x/xerrors"
 )
 
-func ConvertToMaterialStock(raw []byte, l *logger.Logger) (*MaterialStock, error) {
+func ConvertToMaterialStock(raw []byte, l *logger.Logger) ([]MaterialStock, error) {
 	pm := &responses.MaterialStock{}
 
 	err := json.Unmarshal(raw, pm)
@@ -18,12 +18,14 @@ func ConvertToMaterialStock(raw []byte, l *logger.Logger) (*MaterialStock, error
 	if len(pm.D.Results) == 0 {
 		return nil, xerrors.New("Result data is not exist")
 	}
-	if len(pm.D.Results) > 1 {
-		l.Info("raw data has too many Results. %d Results exist. expected only 1 Result. Use the first of Results array", len(pm.D.Results))
+	if len(pm.D.Results) > 10 {
+		l.Info("raw data has too many Results. %d Results exist. show the first 10 of Results array", len(pm.D.Results))
 	}
-	data := pm.D.Results[0]
 
-	return &MaterialStock{
+	materialStock := make([]MaterialStock, 0, 10)
+	for i := 0; i < 10 && i < len(pm.D.Results); i++ {
+		data := pm.D.Results[i]
+		materialStock = append(materialStock, MaterialStock{
         Material:                     data.Material,
         Plant:                        data.Plant,
         StorageLocation:              data.StorageLocation,
@@ -37,28 +39,8 @@ func ConvertToMaterialStock(raw []byte, l *logger.Logger) (*MaterialStock, error
         InventoryStockType:           data.InventoryStockType,
         MaterialBaseUnit:             data.MaterialBaseUnit,
         MatlWrhsStkQtyInMatlBaseUnit: data.MatlWrhsStkQtyInMatlBaseUnit,
-	}, nil
-}
-
-func ConvertToToMaterialStock(raw []byte, l *logger.Logger) (*ToMaterialStock, error) {
-	tms := &responses.ToMaterialStock{}
-	err := json.Unmarshal(raw, tms)
-	if err != nil {
-		return nil, xerrors.Errorf("cannot convert to ToMaterialStock. unmarshal error: %w", err)
+		})
 	}
 
-	return &ToMaterialStock{
-        Material:                  tms.D.Material,
-        Plant:                     tms.D.Plant,
-        StorageLocation:           tms.D.StorageLocation,
-        Batch:                     tms.D.Batch,
-        Supplier:                  tms.D.Supplier,
-        Customer:                  tms.D.Customer,
-        WBSElementInternalID:      tms.D.WBSElementInternalID,
-        SDDocument:                tms.D.SDDocument,
-        SDDocumentItem:            tms.D.SDDocumentItem,
-        InventorySpecialStockType: tms.D.InventorySpecialStockType,
-        InventoryStockType:        tms.D.InventoryStockType,
-        ToMaterialStock:           tms.D.ToMaterialStock,
-	}, nil
+	return materialStock, nil
 }

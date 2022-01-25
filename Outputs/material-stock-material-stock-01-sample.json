@@ -1,0 +1,23 @@
+{
+	"cursor": "/Users/latona2/bitbucket/sap-api-integrations-material-stock-reads/SAP_API_Caller/caller.go#L53",
+	"function": "sap-api-integrations-material-stock-reads/SAP_API_Caller.(*SAPAPICaller).MaterialStock",
+	"level": "INFO",
+	"message": [
+		{
+			"Material": "FG29",
+			"Plant": "1710",
+			"StorageLocation": "171A",
+			"Batch": "0000000109",
+			"Supplier": "",
+			"Customer": "",
+			"WBSElementInternalID": "000000000000000000000000",
+			"SDDocument": "",
+			"SDDocumentItem": "0",
+			"InventorySpecialStockType": "",
+			"InventoryStockType": "01",
+			"MaterialBaseUnit": "BT",
+			"MatlWrhsStkQtyInMatlBaseUnit": "100"
+		}
+	],
+	"time": "2022-01-25T10:08:53.375727+09:00"
+}
